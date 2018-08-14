@@ -1,12 +1,26 @@
 #include <gtk/gtk.h>
+#include <time.h>
 
 static void hello(GtkWidget *widget, gpointer data)
 {
 	printf("Hello World\n");
 }
 
+static void show_time(GtkWidget *widget, gpointer data)
+{
+	time_t t;
+	char buffer[16];
+	struct tm *tm_info;
+
+	time(&t);
+	tm_info = localtime(&t);
+
+	strftime(buffer, 16, "%H:%M:%S", tm_info);
+	printf("%s\n", buffer);
+}
+
 /**
- * @brief	Display a button contained by a button-box
+ * @brief	Display two buttons contained by a button-box
  */
 static void activate(GtkApplication *app, gpointer user_data)
 {
@@ -21,8 +35,14 @@ static void activate(GtkApplication *app, gpointer user_data)
 	button_box = gtk_button_box_new(GTK_ORIENTATION_HORIZONTAL);
 	gtk_container_add(GTK_CONTAINER(window), button_box);
 
+	/* Add a greeting button */
 	button = gtk_button_new_with_label("Hello World");
 	g_signal_connect(button, "clicked", G_CALLBACK(hello), NULL);
+	gtk_container_add(GTK_CONTAINER(button_box), button);
+
+	/* Add a time button */
+	button = gtk_button_new_with_label("What time is it?");
+	g_signal_connect(button, "clicked", G_CALLBACK(show_time), NULL);
 	gtk_container_add(GTK_CONTAINER(button_box), button);
 
 	gtk_widget_show_all(window);
