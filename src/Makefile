@@ -2,10 +2,14 @@
 CFLAGS += `pkg-config --cflags gtk+-3.0`
 LIBS := `pkg-config --libs gtk+-3.0`
 
-all:
-	$(CC) example1.c -o example1 $(CFLAGS) ${LIBS}
-	$(CC) example2.c -o example2 $(CFLAGS) ${LIBS}
-	$(CC) example3.c -o example3 $(CFLAGS) ${LIBS}
+TARGET := example1 example2 example3 example4
+
+.PHONY: all
+
+all: $(TARGET)
+
+$(TARGET): %: %.c
+	$(CC) $< -o $@ $(CFLAGS) $(LIBS)
 
 clean:
-	-@rm -f example1 example2 example3
+	-@rm -f example1 example2 example3 example4
